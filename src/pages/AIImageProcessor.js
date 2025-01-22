@@ -21,33 +21,62 @@ const AIImageProcessor = () => {
     }
   };
 
+  // const processImage = async (file) => {
+  //   setIsProcessing(true);
+  //   try {
+  //     const formdata = new FormData();
+  //     formdata.append("image", file); 
+  //     const response = await fetch("https://skindisease-backend.onrender.com/api/upload", {
+  //       method: "POST",
+  //       body: formdata,
+  //     });
+      
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`);
+  //     }
+  //     const data = await response.json();
+  //     console.log(data);
+  //     setIsProcessing(false);
+
+  //     // console.log(data);
+
+  //     setProcessedResults(data.processedResults); 
+  //     setIsProcessing(false);
+  //   } catch (err) {
+  //     setError("Error processing image. Please try again.");
+  //     setIsProcessing(false);
+  //   }
+  // };
+
   const processImage = async (file) => {
     setIsProcessing(true);
     try {
       const formdata = new FormData();
-      formdata.append("image", file); 
+      formdata.append("image", file);
+  
       const response = await fetch("https://skindisease-backend.onrender.com/api/upload", {
         method: "POST",
         body: formdata,
       });
-      
+  
       if (!response.ok) {
+        const errorText = await response.text(); // Get error details from the backend
+        console.error("Backend Error:", errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+  
       const data = await response.json();
-      console.log(data);
-      setIsProcessing(false);
-
-      // console.log(data);
-
-      setProcessedResults(data.processedResults); 
+      console.log("Response Data:", data);
+  
+      setProcessedResults(data.processedResults); // Assuming processedResults is returned by the backend
       setIsProcessing(false);
     } catch (err) {
+      console.error("Error:", err.message);
       setError("Error processing image. Please try again.");
       setIsProcessing(false);
     }
   };
-
+  
   const clearImage = () => {
     setUploadedImage(null);
     setProcessedResults([]);
